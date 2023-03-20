@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -11,28 +12,18 @@ class PostController extends Controller
      */
     public function index()
     {
+        $posts = Storage::get('posts.txt');
+        $posts = explode("\n", $posts);
+        $arr = [];
+        foreach ($posts as $key ) {
+            $arr[] = explode(",", $key);
+        }
+        $posts = $arr;
+
         $data_view = [
-            'posts' => [
-                [
-                    'tittle' => 'Atlet Bulutangkis Syabda Perkasa Belawa Meninggal Dunia Baca artikel CNN Indonesia "Atlet Bulutangkis Syabda Perkasa Belawa Meninggal Dunia"',
-                    'content' => 'Pada Senin pagi, media sosial diramaikan dengan berita duka yang dialami dunia bulutangkis Indonesia. Salah satu atlet tunggal putra pratama PBSI Syabda Perkasa Belawa diklaim meninggal dunia. Baca artikel CNN Indonesia "Atlet Bulutangkis Syabda Perkasa Belawa Meninggal Dunia"'
-                ],
-                [
-                    'tittle' => 'Atlet Bulutangkis Syabda Perkasa Belawa Meninggal Dunia Baca artikel CNN Indonesia "Atlet Bulutangkis Syabda Perkasa Belawa Meninggal Dunia"',
-                    'content' => 'Pada Senin pagi, media sosial diramaikan dengan berita duka yang dialami dunia bulutangkis Indonesia. Salah satu atlet tunggal putra pratama PBSI Syabda Perkasa Belawa diklaim meninggal dunia. Baca artikel CNN Indonesia "Atlet Bulutangkis Syabda Perkasa Belawa Meninggal Dunia"'
-                ],
-                [
-                    'tittle' => 'Atlet Bulutangkis Syabda Perkasa Belawa Meninggal Dunia Baca artikel CNN Indonesia "Atlet Bulutangkis Syabda Perkasa Belawa Meninggal Dunia"',
-                    'content' => 'Pada Senin pagi, media sosial diramaikan dengan berita duka yang dialami dunia bulutangkis Indonesia. Salah satu atlet tunggal putra pratama PBSI Syabda Perkasa Belawa diklaim meninggal dunia. Baca artikel CNN Indonesia "Atlet Bulutangkis Syabda Perkasa Belawa Meninggal Dunia"'
-                ],
-            ],
-            'users' => [
-                'agus',
-                'budi',
-                'joni',
-                'jojo',
-            ]
+            'posts' => $posts,
         ];
+        
         return view('posts.index', $data_view);
     }
 
@@ -41,7 +32,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -57,7 +48,20 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $posts =  Storage::get('posts.txt');
+        $posts = explode("\n", $posts);
+        $post = [];
+        $arr = [];
+        foreach ($posts as $key ) {
+            $arr = explode(",", $key);
+            if($arr[0] == $id){
+                $post = $arr;
+            }
+        }
+        $data_view = [
+            'post' => $post,
+        ];
+        return view('posts.show', $data_view);
     }
 
     /**

@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>My Blog</title>
-  <style>
+  <link href=" {{ asset('bootstrap5/css/bootstrap.min.css') }} " rel="stylesheet">
+  <script src=" {{ asset('bootstrap5/js/bootstrap.bundle.min.js') }} "></script>
+  {{-- <style>
     * {
       padding: 0;
       margin: 0;
@@ -41,26 +43,26 @@
       border: 1px solid black;
       width: 300px;
     }
-  </style>
+  </style> --}}
 </head>
 <body>
   <nav>
-    <h1 class="judul">My Blog</h1>
+    <h1 class="display-2 text-primary text-center">
+      My Blog <a href=" {{url("posts/create")}}" class="btn btn-success"> + Buat Postingan Baru </a>
+    </h1>
   </nav>
 
-  <main>
+  <main class="container">
     <div>
-      @php
-        $number = 1;
-      @endphp
       @foreach ($posts as $post)
-        <div class="blog">
-          <h3>{{ $post['tittle'] }} <small> #{{ $number }} </small> </h3>
-          <p class="content"> {{ $post['content'] }} </p>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ $post[1] }}</h5>
+          <p class="card-text">{{ $post[2] }}</p>
+          <p class="card-text"><small class="text-muted">{{ $post[3] }}</small></p>
+          <a href=" {{ url("posts/$post[0]") }} " class="btn btn-primary">cek selengkapnya</a>
         </div>
-        @php
-            $number++;
-        @endphp
+      </div>
       @endforeach
     </div>
   </main>
