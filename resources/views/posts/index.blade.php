@@ -50,10 +50,10 @@
 
   <main>
     <div>
+      @php
+        $number = 1;
+      @endphp
       @foreach ($posts as $post)
-        @php
-          $number = 1;
-        @endphp
         <div class="blog">
           <h3>{{ $post['tittle'] }} <small> #{{ $number }} </small> </h3>
           <p class="content"> {{ $post['content'] }} </p>
