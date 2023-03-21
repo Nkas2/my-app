@@ -12,10 +12,11 @@
     <div class="container">
         <h1>Buat Postingan</h1>
 
-        <form action=" {{url('posts')}} " method="post">
+        <form action=" {{ url('posts') }} " method="post">
+            @csrf
             <div class="mb-3">
                 <label for="tittle" class="form-label">Judul</label>
-                <input type="text" class="form-control" id="tittle" name="tittle">
+                <input type="text" class="form-control" id="tittle" name="tittle" autocomplete="username">
             </div>
             <div class="mb-3">
                 <label for="content" class="form-label">Content</label>
