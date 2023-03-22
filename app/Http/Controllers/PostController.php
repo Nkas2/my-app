@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -12,19 +13,13 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Storage::get('posts.txt');
-        $posts = explode("\n", $posts);
-        $arr = [];
-        foreach ($posts as $key ) {
-            $arr[] = explode(",", $key);
-        }
-        $posts = $arr;
-
-        $data_view = [
-            'posts' => $posts,
+        $posts = DB::table('posts')
+                    ->select('title', 'content', 'id', 'created_at')
+                    ->get();
+        $view_data = [
+            "posts" => $posts,
         ];
-        
-        return view('posts.index', $data_view);
+        return view('posts.index', $view_data);
     }
 
     /**
@@ -40,23 +35,15 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $title = $request->input("tittle");
+        $title = strtoupper($request->input("tittle"));
         $content = $request->input("content");
 
-        $posts = Storage::get('posts.txt');
-        $posts = explode("\n", $posts);
-
-        $new_post = [
-            count($posts) + 1,
-            $title,
-            $content,
-            date('Y-m-d H:i:s'),
-        ];
-
-        $posts[] = implode(",", $new_post);
-        $posts = implode("\n", $posts);
-
-        Storage::write('posts.txt', $posts);
+        DB::table('posts')->insert([
+            'title'         => $title,
+            'content'       => $content,
+            'created_at'    => date("Y-m-d H:i:s"),
+            'updated_at'    => date("Y-m-d H:i:s"),
+        ]);
 
         return redirect('posts');
     }
@@ -66,16 +53,10 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $posts =  Storage::get('posts.txt');
-        $posts = explode("\n", $posts);
-        $post = [];
-        $arr = [];
-        foreach ($posts as $key ) {
-            $arr = explode(",", $key);
-            if($arr[0] == $id){
-                $post = $arr;
-            }
-        }
+        $post = DB::table('posts')
+                    ->where('id', $id)
+                    ->first();
+        // dd($post);
         $data_view = [
             'post' => $post,
         ];
