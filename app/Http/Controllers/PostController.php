@@ -14,7 +14,8 @@ class PostController extends Controller
     public function index()
     {
         $posts = DB::table('posts')
-                    ->select('title', 'content', 'id', 'created_at')
+                    ->select('title', 'content', 'id', 'updated_at')
+                    ->where('active', true)
                     ->get();
         $view_data = [
             "posts" => $posts,
@@ -68,7 +69,11 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $post = DB::table('posts')
+                    ->where('id', $id)
+                    ->select("title", "content", "id")
+                    ->first();
+        return view('posts.edit', [ "post" => $post]);
     }
 
     /**
@@ -76,7 +81,20 @@ class PostController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $title = strtoupper($request->input("tittle"));
+        $content = $request->input("content");
+        $updated_at = date("Y-m-d H:i:s");
+
+        DB::table("posts")
+            ->where("id", $id)
+            ->update([
+                "title" => $title,
+                "content" => $content,
+                "updated_at" => $updated_at,
+        ]);
+
+        return redirect('posts');
+
     }
 
     /**
@@ -84,6 +102,7 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('posts')->where("id", $id)->delete();
+        return redirect('posts');
     }
 }
