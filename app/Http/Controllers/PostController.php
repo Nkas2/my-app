@@ -15,10 +15,9 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::active()->get();
-        $view_data = [
-            "posts" => $posts,
-        ];
-        return view('posts.index', $view_data);
+        return view('posts.index', [
+            'posts' => $posts,
+        ]);
     }
 
     /**
@@ -52,10 +51,8 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $post = DB::table('posts')
-                    ->where('id', $id)
-                    ->first();
-        // dd($post);
+        $post = Post::where('id', $id)->first();
+        
         $data_view = [
             'post' => $post,
         ];
@@ -67,10 +64,7 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
-        $post = DB::table('posts')
-                    ->where('id', $id)
-                    ->select("title", "content", "id")
-                    ->first();
+        $post = Post::where('id', $id)->first();
         return view('posts.edit', [ "post" => $post]);
     }
 
@@ -83,15 +77,13 @@ class PostController extends Controller
         $content = $request->input("content");
         $updated_at = date("Y-m-d H:i:s");
 
-        DB::table("posts")
-            ->where("id", $id)
-            ->update([
+        Post::where("id", $id)->update([
                 "title" => $title,
                 "content" => $content,
                 "updated_at" => $updated_at,
         ]);
 
-        return redirect('posts');
+        return redirect("posts/$id");
 
     }
 
@@ -100,7 +92,7 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        DB::table('posts')->where("id", $id)->delete();
+        Post::where("id", $id)->delete();
         return redirect('posts');
     }
 }
